@@ -30,6 +30,14 @@ class TasksRepository implements ITasksRepository {
         return await prisma.task.findMany();
     }
 
+    async delete(id: number): Promise<void> {
+        await prisma.task.delete({
+            where: { id }
+        });    
+    }
+
+
+
 }
 
 export { TasksRepository }
