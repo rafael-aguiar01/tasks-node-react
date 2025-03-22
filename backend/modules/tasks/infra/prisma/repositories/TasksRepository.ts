@@ -26,6 +26,10 @@ class TasksRepository implements ITasksRepository {
        })
     }
 
+    async listAll(): Promise<Task[]> {
+        return await prisma.task.findMany();
+    }
+
 }
 
 export { TasksRepository }
