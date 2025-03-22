@@ -3,7 +3,7 @@ import { Request, Response } from "express";
 import { container } from "tsyringe";
 import { CreateTaskUserCase } from "../domain/CreateTaskUseCase";
 import { ZodError } from 'zod';
-import { createTaskSchema } from "../schemas/createTaskSchema";
+import { createTaskSchema } from "../schemas/TaskSchema";
 
 class CreateTaskController {
     async handle (request: Request, response: Response): Promise<Response> {

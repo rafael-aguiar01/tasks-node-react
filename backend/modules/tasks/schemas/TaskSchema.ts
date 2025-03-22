@@ -6,3 +6,10 @@ export const createTaskSchema = z.object({
     description: z.string().optional(),
     status: z.nativeEnum(TaskStatus).optional(),
 }).strict()
+
+export const updateTaskSchema = z.object({
+    id: z.number(),
+    title: z.string().optional(),
+    description: z.string().optional(),
+    status: z.nativeEnum(TaskStatus).optional(),
+}).strict()
