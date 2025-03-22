@@ -1,5 +1,5 @@
-interface ICreateTaskDTO {
-    title: string, 
-    description: string,
-    status: 'PENDING' | 'COMPLETED'
-}
+import { z } from 'zod';
+import { createTaskSchema } from '../schemas/createTaskSchema';
+
+export type ICreateTaskDTO = z.infer<typeof createTaskSchema>;
+

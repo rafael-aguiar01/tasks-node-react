@@ -2,22 +2,21 @@ import { create } from "domain";
 import { Request, Response } from "express";
 import { container } from "tsyringe";
 import { CreateTaskUserCase } from "../domain/CreateTaskUseCase";
+import { ZodError } from 'zod';
+import { createTaskSchema } from "../schemas/createTaskSchema";
 
 class CreateTaskController {
     async handle (request: Request, response: Response): Promise<Response> {
-        const { title, description, status} = request.body
-        const createTaskUserCase = container.resolve(CreateTaskUserCase)
-
         try {
-            await createTaskUserCase.execute({
-                    title, 
-                    description,
-                    status
-            })
-
-            return response.status(201).send()
+            const parsedData = createTaskSchema.parse(request.body);
+            const createTaskUseCase = container.resolve(CreateTaskUserCase);
+            await createTaskUseCase.execute(parsedData);
+            return response.status(201).send();
         } catch (error) {
-            return response.status(400).json({ error: error.message})
+            if (error instanceof ZodError) {
+                return response.status(400).json({ error: error.errors });
+              }
+              return response.status(500).json({ error: 'Erro interno do servidor' });
         }
     }
 }
