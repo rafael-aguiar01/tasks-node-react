@@ -1,3 +1,5 @@
+import 'reflect-metadata';
+import '../../container'; 
 import app from "./app";
 
 app.listen(3333, () => {
