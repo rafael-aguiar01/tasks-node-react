@@ -8,7 +8,7 @@ export const createTaskSchema = z.object({
 }).strict()
 
 export const updateTaskSchema = z.object({
-    id: z.number(),
+    id: z.number().optional(),
     title: z.string().optional(),
     description: z.string().optional(),
     status: z.nativeEnum(TaskStatus).optional(),

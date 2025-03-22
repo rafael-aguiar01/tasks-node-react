@@ -13,7 +13,7 @@ const deleteTaskController = new DeleteTaskController()
 
 tasksRoutes.get('/', listTaskController.handle.bind(listTaskController))
 tasksRoutes.post('/', createTaskController.handle.bind(createTaskController))
-tasksRoutes.put('/', updateTaskController.handle.bind(createTaskController))
+tasksRoutes.put('/:id', updateTaskController.handle.bind(createTaskController))
 tasksRoutes.delete('/:id', deleteTaskController.handle.bind(deleteTaskController))
 
 

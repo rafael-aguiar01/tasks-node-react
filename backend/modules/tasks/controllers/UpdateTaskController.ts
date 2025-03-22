@@ -9,9 +9,15 @@ class UpdateTaskController {
 
     async handle(request: Request, response: Response): Promise<Response> {
         try {
+            const id = Number(request.params.id)
+
+            if (isNaN(id)) {
+                return response.status(400).json({ error: "ID inválido" });
+            }
+
             const parsedData = updateTaskSchema.parse(request.body);
             const updateTaskUseCase = container.resolve(UpdateTaskUseCase);
-            await updateTaskUseCase.execute(parsedData);
+            await updateTaskUseCase.execute({id, ...parsedData});
             return response.status(201).send();
         } catch (error) {
             if (error instanceof ZodError) {
