@@ -1,7 +1,9 @@
+// src/components/TaskList/TaskList.tsx
 import React from "react";
 import TaskItem from "../TaskItem/TaskItem";
 import TaskForm from "../TaskForm/TaskForm";
 import EditTaskModal from "../EditTaskModal/EditTaskModal";
+import TaskFilter from "../TaskFilter/TaskFilter";
 import { Task } from "../../types/Task";
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
@@ -18,6 +20,7 @@ const TaskList: React.FC = () => {
 
   const [isEditModalOpen, setIsEditModalOpen] = React.useState(false);
   const [editingTask, setEditingTask] = React.useState<Task | null>(null);
+  const [filter, setFilter] = React.useState<"all" | "pending" | "completed">("all");
 
   const openEditModal = (task: Task) => {
     setEditingTask(task);
@@ -72,15 +75,23 @@ const TaskList: React.FC = () => {
     });
   };
 
+  const filteredTasks = tasks.filter((task) => {
+    if (filter === "all") return true;
+    if (filter === "pending") return task.status === "PENDING";
+    if (filter === "completed") return task.status === "COMPLETED";
+    return true;
+  });
+
   return (
     <div className="bg-gray-50 p-6 rounded-xl shadow-lg w-full max-w-md space-y-6">
       <h2 className="text-2xl font-semibold text-center text-indigo-800">
         Lista de Tarefas
       </h2>
       <TaskForm onAddTask={addTask} />
+      <TaskFilter filter={filter} onFilterChange={setFilter} />
       <ul className="space-y-3">
-        {tasks.length > 0 ? (
-          tasks.map((task) => (
+        {filteredTasks.length > 0 ? (
+          filteredTasks.map((task) => (
             <TaskItem
               key={task.id}
               task={task}
@@ -91,7 +102,7 @@ const TaskList: React.FC = () => {
           ))
         ) : (
           <p className="text-center text-gray-500 text-sm">
-            Nenhuma tarefa adicionada ainda.
+            Nenhuma tarefa encontrada.
           </p>
         )}
       </ul>
