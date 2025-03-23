@@ -9,6 +9,9 @@ export const useTasks = () => {
   const fetchTasks = async () => {
     try {
       const response = await api.get("/tasks");
+      if (response.status !== 200) {
+        throw new Error("Erro ao buscar tarefas");
+      }
       const data = response.data;
       const formattedTasks = data.tasks.map((task: Task) => ({
         id: task.id,
@@ -38,6 +41,9 @@ export const useTasks = () => {
     };
     try {
       const response = await api.post("/tasks", newTask);
+      if (response.status !== 201) {
+        throw new Error("Erro ao adicionar tarefa");
+      }
       const createdTask = response.data;
       setTasks((prevTasks) => [...prevTasks, createdTask]);
       toast.success("Tarefa adicionada com sucesso!");
@@ -49,7 +55,10 @@ export const useTasks = () => {
 
   const toggleTaskCompletion = async (id: number) => {
     try {
-      await api.patch(`/tasks/${id}`, { status: "COMPLETED" });
+      const response = await api.patch(`/tasks/${id}`, { status: "COMPLETED" });
+      if (response.status !== 200) {
+        throw new Error("Erro ao atualizar o status da tarefa");
+      }
       setTasks((prevTasks) =>
         prevTasks.map((task) =>
           task.id === id ? { ...task, status: "COMPLETED" } : task
@@ -64,7 +73,10 @@ export const useTasks = () => {
 
   const deleteTask = async (id: number) => {
     try {
-      await api.delete(`/tasks/${id}`);
+      const response = await api.delete(`/tasks/${id}`);
+      if (response.status !== 200) {
+        throw new Error("Erro ao deletar tarefa");
+      }
       setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id));
       toast.success("Tarefa excluída com sucesso!");
     } catch (error) {
@@ -73,5 +85,41 @@ export const useTasks = () => {
     }
   };
 
-  return { tasks, addTask, toggleTaskCompletion, deleteTask };
+  const saveEdit = async (
+    id: number,
+    title: string,
+    description: string,
+    onClose: () => void
+  ) => {
+    const updatedFields: Partial<Task> = {};
+    if (title.trim() !== "") {
+      updatedFields.title = title.trim();
+    }
+    if (description.trim() !== "") {
+      updatedFields.description = description.trim();
+    }
+    if (Object.keys(updatedFields).length === 0) {
+      toast.info("Nenhuma alteração foi feita.");
+      onClose();
+      return;
+    }
+    try {
+      const response = await api.put(`/tasks/${id}`, updatedFields);
+      if (response.status !== 200) {
+        throw new Error("Erro ao editar tarefa");
+      }
+      setTasks((prevTasks) =>
+        prevTasks.map((task) =>
+          task.id === id ? { ...task, ...updatedFields } : task
+        )
+      );
+      toast.success("Tarefa editada com sucesso!");
+      onClose();
+    } catch (error) {
+      console.error("Erro ao editar tarefa:", error);
+      toast.error("Erro ao editar a tarefa.");
+    }
+  };
+
+  return { tasks, addTask, toggleTaskCompletion, deleteTask, saveEdit };
 };
