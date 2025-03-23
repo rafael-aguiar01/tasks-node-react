@@ -18,7 +18,7 @@ class UpdateTaskController {
             const parsedData = updateTaskSchema.parse(request.body);
             const updateTaskUseCase = container.resolve(UpdateTaskUseCase);
             await updateTaskUseCase.execute({id, ...parsedData});
-            return response.status(201).send();
+            return response.status(200).send();
         } catch (error) {
             if (error instanceof ZodError) {
                 return response.status(400).json({ error: error.errors });
