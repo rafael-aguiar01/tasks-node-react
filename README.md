@@ -35,7 +35,7 @@ Antes de rodar o projeto, certifique-se de ter os seguintes requisitos instalado
 ### 1. Clonar o Repositório
 Clone o repositório para sua máquina local:
 ```bash
-git clone https://github.com/seu-usuario/teste-react-node.git
+git clone https://github.com/rafael-aguiar01/tasks-node-react.git
 cd teste-react-node
 ```
 
