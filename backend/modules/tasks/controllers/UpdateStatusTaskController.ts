@@ -14,7 +14,7 @@ class UpdateStatusTaskController {
 
             const updateStatusTaskUseCase = container.resolve(UpdateStatusTaskUseCase);
             await updateStatusTaskUseCase.execute(id);
-            return response.status(201).send();
+            return response.status(200).send();
         } catch (error) {
             return response.status(400).json({ error: error.errors });
         }

@@ -10,8 +10,8 @@ class CreateTaskController {
         try {
             const parsedData = createTaskSchema.parse(request.body);
             const createTaskUseCase = container.resolve(CreateTaskUserCase);
-            await createTaskUseCase.execute(parsedData);
-            return response.status(201).send();
+            const task = await createTaskUseCase.execute(parsedData);
+            return response.status(201).json( task );
         } catch (error) {
             if (error instanceof ZodError) {
                 return response.status(400).json({ error: error.errors });
